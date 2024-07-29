@@ -1,24 +1,16 @@
 #include <windows.h>
 #include <string>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
-void setup_console() {
+void setup_logging()
+{
     AllocConsole();
-
-    // Stupid
-    FILE *fDummy;
-    freopen_s(&fDummy, "CONIN$", "r", stdin);
-    freopen_s(&fDummy, "CONOUT$", "w", stderr);
-    freopen_s(&fDummy, "CONOUT$", "w", stdout);
-
-    std::cout.clear();
-    std::cin.clear();
-    std::cerr.clear();
 }
 
 void on_dll_attach()
 {
-    setup_console();
+    setup_logging();
 
     PWSTR thread_desc_ptr = NULL;
     HRESULT hr = GetThreadDescription(GetCurrentThread(), &thread_desc_ptr);
@@ -34,7 +26,7 @@ void on_dll_attach()
     LocalFree(thread_desc_ptr);
 
     int main_thread_id = std::stoi(thread_desc);
-    printf("Main thread is: %d\n", main_thread_id);
+    spdlog::info("Main thread is: {}", main_thread_id);
 
     HANDLE main_thread = OpenThread(THREAD_SUSPEND_RESUME, FALSE, main_thread_id);
     ResumeThread(main_thread);
