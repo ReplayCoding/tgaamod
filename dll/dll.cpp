@@ -1,7 +1,8 @@
 #include <windows.h>
 #include <string>
-#include <iostream>
 #include <spdlog/spdlog.h>
+
+#include "tgaamod.h"
 
 void setup_logging()
 {
@@ -16,7 +17,7 @@ void on_dll_attach()
     HRESULT hr = GetThreadDescription(GetCurrentThread(), &thread_desc_ptr);
     if (FAILED(hr))
     {
-        std::string msg = "Couldn't get thread description" + std::to_string(hr);
+        std::string msg = "Couldn't get thread description: " + std::to_string(hr);
         MessageBoxA(NULL, msg.c_str(), NULL, MB_OK);
 
         ExitProcess(1);
@@ -27,6 +28,8 @@ void on_dll_attach()
 
     int main_thread_id = std::stoi(thread_desc);
     spdlog::info("Main thread is: {}", main_thread_id);
+
+    TGAAMod::create();
 
     HANDLE main_thread = OpenThread(THREAD_SUSPEND_RESUME, FALSE, main_thread_id);
     ResumeThread(main_thread);
