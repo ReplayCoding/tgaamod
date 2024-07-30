@@ -3,7 +3,11 @@ add_library(
     dll.cpp
     tgaamod.cpp
     hook.cpp
+    mt/mtdti.cpp
+    mt/mtproperty.cpp
 )
+
+target_include_directories(tgaamod PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 find_package(spdlog CONFIG REQUIRED)
 target_link_libraries(tgaamod PRIVATE spdlog::spdlog)
