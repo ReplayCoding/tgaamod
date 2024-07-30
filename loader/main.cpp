@@ -63,11 +63,11 @@ int main()
 
     if (!CreateProcessA(GAME_PATH, nullptr, 0, 0, FALSE, DEBUG_ONLY_THIS_PROCESS | DETACHED_PROCESS, nullptr, GAME_CWD, &startup_info, &process_info))
     {
-        spdlog::error("Failed to create process!\n");
+        spdlog::error("Failed to create process!");
         return 1;
     };
 
-    spdlog::info("Created process: {}\n", process_info.dwProcessId);
+    spdlog::info("Created process: {}", process_info.dwProcessId);
 
     while (true)
     {
@@ -87,11 +87,11 @@ int main()
         case CREATE_PROCESS_DEBUG_EVENT:
         {
             CREATE_PROCESS_DEBUG_INFO *create_info = &debug_event.u.CreateProcessInfo;
-            spdlog::info("Process launch event [baddr: {} thread: {}]\n", create_info->lpBaseOfImage, GetThreadId(create_info->hThread));
+            spdlog::info("Process launch event [baddr: {} thread: {}]", create_info->lpBaseOfImage, GetThreadId(create_info->hThread));
 
             if (!inject_dll_to_process(DLL_NAME, create_info->hProcess, create_info->hThread))
             {
-                spdlog::error("Failed to inject DLL into process, killing\n");
+                spdlog::error("Failed to inject DLL into process, killing");
                 TerminateProcess(process_info.hProcess, 0);
 
                 // Let us handle the exit process event so we get a nice exit message (stupid)
