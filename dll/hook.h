@@ -15,14 +15,14 @@ public:
 
     inline StaticFunctionHook(ReplacementFunctionType *replacement)
     {
-        s_original_func = reinterpret_cast<OriginalFunctionType*>(address);
+        s_original_func = reinterpret_cast<OriginalFunctionType *>(address);
         s_replacement = replacement;
 
-        hook_function_internal(reinterpret_cast<void**>(&s_original_func), replacement_func);
+        hook_function_internal(reinterpret_cast<void **>(&s_original_func), replacement_func);
     };
     inline ~StaticFunctionHook()
     {
-        unhook_function_internal(reinterpret_cast<void**>(&s_original_func), replacement_func);
+        unhook_function_internal(reinterpret_cast<void **>(&s_original_func), replacement_func);
     };
 
 private:
@@ -43,16 +43,18 @@ public:
     using OriginalFunctionType = ReturnType(Args...);
     using ReplacementFunctionType = ReturnType(OriginalFunctionType *original_func, Args...);
 
-    inline RuntimeAddressFunctionHook(uintptr_t address, ReplacementFunctionType *replacement)
+    inline RuntimeAddressFunctionHook() = default;
+
+    inline void setup(uintptr_t address, ReplacementFunctionType *replacement)
     {
-        s_original_func = reinterpret_cast<OriginalFunctionType*>(address);
+        s_original_func = reinterpret_cast<OriginalFunctionType *>(address);
         s_replacement = replacement;
 
-        hook_function_internal(reinterpret_cast<void**>(&s_original_func), replacement_func);
+        hook_function_internal(reinterpret_cast<void **>(&s_original_func), replacement_func);
     };
     inline ~RuntimeAddressFunctionHook()
     {
-        unhook_function_internal(reinterpret_cast<void**>(&s_original_func), replacement_func);
+        unhook_function_internal(reinterpret_cast<void **>(&s_original_func), replacement_func);
     };
 
 private:

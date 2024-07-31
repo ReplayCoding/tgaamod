@@ -2,9 +2,10 @@ add_library(
     tgaamod SHARED
     dll.cpp
     tgaamod.cpp
-    hook.cpp
+    overlay.cpp
     mt/mtdti.cpp
     mt/mtproperty.cpp
+    hook.cpp
 )
 
 target_include_directories(tgaamod PRIVATE ${CMAKE_CURRENT_LIST_DIR})
@@ -19,3 +20,6 @@ target_link_libraries(tgaamod PRIVATE ${DETOURS_LIBRARY})
 
 find_package(fmt CONFIG REQUIRED)
 target_link_libraries(tgaamod PRIVATE fmt::fmt)
+
+find_package(imgui CONFIG REQUIRED)
+target_link_libraries(tgaamod PRIVATE imgui::imgui)

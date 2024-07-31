@@ -21,6 +21,14 @@ public:
     inline const char *name() const { return m_name; };
     static MtDTI *from_hash(uint32_t hash);
 
+    template <class T>
+    static inline MtDTI *from()
+    {
+        static_assert(std::is_base_of_v<MtObject, T> == true, "Cannot get DTI for non-MtObject type");
+
+        return from_hash(T::DTI_HASH);
+    };
+
 private:
     char *m_name;
 

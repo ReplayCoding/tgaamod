@@ -93,3 +93,18 @@ std::string MtProperty::type_name()
 
     return fmt::format("custom ({})", type());
 };
+
+MtProperty *MtPropertyList::find_property(const char *name)
+{
+    MtProperty *prop = elements();
+    do
+    {
+        std::string_view prop_name = std::string_view(prop->name());
+        if (prop_name == name)
+        {
+            return prop;
+        }
+    } while ((prop = prop->prev()) != nullptr);
+
+    return nullptr;
+}

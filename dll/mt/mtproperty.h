@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
+#include <string>
 
 #include "mt/mtobject.h"
 
@@ -108,6 +109,11 @@ public:
         return get_value<char *, PropType::CSTRING>();
     };
 
+    MtObject *get_classref()
+    {
+        return get_value<MtObject *, PropType::CLASSREF>();
+    };
+
 private:
     template <typename T, PropType expected_type>
     T get_value()
@@ -162,7 +168,10 @@ std::string format_as(MtProperty::PropType type);
 class MtPropertyList : public MtObject
 {
 public:
+    static const uint32_t DTI_HASH = 0x2a031018;
+
     inline MtProperty *elements() { return m_element; };
+    MtProperty *find_property(const char *name);
 
 private:
     MtProperty *m_element;
