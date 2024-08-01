@@ -10,10 +10,10 @@
 #include <imgui_impl_win32.h>
 
 #include "overlay.h"
+#include "tgaamod.h"
 #include "mt/mtobject.h"
 #include "mt/mtdti.h"
 #include "mt/mtproperty.h"
-#include "overlay.h"
 
 // Per ImGui header:
 // Win32 message handler your application need to call.
@@ -153,12 +153,10 @@ void Overlay::draw()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Hello World");
-    ImGui::Text("Test");
-
-    char input_value[128] = {0};
-    ImGui::InputText("input", (char *)&input_value, 128);
-    ImGui::End();
+    for (std::unique_ptr<Module> &module : TGAAMod::s_tgaa_mod->m_modules)
+    {
+        module->draw();
+    };
 
     ImGui::Render();
 

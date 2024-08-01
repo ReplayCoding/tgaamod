@@ -114,6 +114,11 @@ public:
         return get_value<MtObject *, PropType::CLASSREF>();
     };
 
+    float get_f32()
+    {
+        return get_value<float, PropType::F32>();
+    };
+
 private:
     template <typename T, PropType expected_type>
     T get_value()

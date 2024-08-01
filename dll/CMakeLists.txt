@@ -6,6 +6,7 @@ add_library(
     mt/mtdti.cpp
     mt/mtproperty.cpp
     hook.cpp
+    modules/fps.cpp
 )
 
 target_include_directories(tgaamod PRIVATE ${CMAKE_CURRENT_LIST_DIR})
