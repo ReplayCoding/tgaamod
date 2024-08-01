@@ -4,6 +4,7 @@ add_library(
     tgaamod.cpp
     overlay.cpp
     mt/mtdti.cpp
+    mt/mtobject.cpp
     mt/mtproperty.cpp
     hook.cpp
     modules/fps.cpp

@@ -18,8 +18,7 @@ public:
     {
         ImGui::Begin("FPS Counter", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
-        const std::unique_ptr<MtPropertyList> prop_list = MtDTI::from<MtPropertyList>()->new_instance_owned<MtPropertyList>();
-        m_skeleton_main->create_property(prop_list.get());
+        const std::unique_ptr<MtPropertyList> prop_list = m_skeleton_main->create_property();
 
         std::string actual_fps = fmt::format("FPS: {}", prop_list->find_property("mActualFps")->get_f32());
         std::string build_version = fmt::format("Build Version: {}", prop_list->find_property("mBuildVersion")->get_cstring());

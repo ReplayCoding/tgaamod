@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <string>
+#include <stdexcept>
 
 #include "mt/mtobject.h"
 
@@ -104,17 +105,17 @@ public:
         return m_prev;
     };
 
-    char *get_cstring()
+    inline char *get_cstring()
     {
         return get_value<char *, PropType::CSTRING>();
     };
 
-    MtObject *get_classref()
+    inline MtObject *get_classref()
     {
         return get_value<MtObject *, PropType::CLASSREF>();
     };
 
-    float get_f32()
+    inline float get_f32()
     {
         return get_value<float, PropType::F32>();
     };

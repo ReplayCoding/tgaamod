@@ -36,8 +36,7 @@ void *TGAAMod::sSkeletonMain_constructor_replacement(void *original_constructor(
 {
     void *return_value = original_constructor(_this);
 
-    const std::unique_ptr<MtPropertyList> prop_list = MtDTI::from<MtPropertyList>()->new_instance_owned<MtPropertyList>();
-    _this->create_property(prop_list.get());
+    const std::unique_ptr<MtPropertyList> prop_list = _this->create_property();
 
     spdlog::info("Build Version is {}", prop_list->find_property("mBuildVersion")->get_cstring());
 
