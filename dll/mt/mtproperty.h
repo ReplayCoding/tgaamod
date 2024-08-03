@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "mt/mtobject.h"
+#include "mt/mtcolor.h"
 
 class MtProperty
 {
@@ -105,20 +106,17 @@ public:
         return m_prev;
     };
 
-    inline char *get_cstring()
-    {
-        return get_value<char *, PropType::CSTRING>();
-    };
+    inline char *get_cstring() { return get_value<char *, PropType::CSTRING>(); };
+    inline MtObject *get_classref() { return get_value<MtObject *, PropType::CLASSREF>(); };
+    inline float get_f32() { return get_value<float, PropType::F32>(); };
+    inline int32_t get_s32() { return get_value<int32_t, PropType::S32>(); };
+    inline uint32_t get_u32() { return get_value<uint32_t, PropType::U32>(); };
+    inline bool get_bool() { return get_value<bool, PropType::BOOL>(); };
+    inline MtColor get_color() { return get_value<MtColor, PropType::COLOR>(); };
 
-    inline MtObject *get_classref()
-    {
-        return get_value<MtObject *, PropType::CLASSREF>();
-    };
+    inline MtObject *get_class() { return get_value_ptr<MtObject, PropType::CLASS>(); };
 
-    inline float get_f32()
-    {
-        return get_value<float, PropType::F32>();
-    };
+    std::string formatted_value();
 
 private:
     template <typename T, PropType expected_type>
@@ -151,6 +149,31 @@ private:
             }
 
             return *reinterpret_cast<T *>(m_getter_or_address);
+        }
+    }
+
+    template <typename T, PropType expected_type>
+    T *get_value_ptr()
+    {
+
+        // TODO: handle customs
+        if (static_cast<uint32_t>(expected_type) != type())
+        {
+            throw new std::runtime_error("prop type doesn't match expected type!");
+        }
+
+        if ((attr() & ATTR_DYNAMIC) != 0)
+        {
+            throw new std::runtime_error("TODO: figure out how non-trivial types are returned by dynamic props");
+        }
+        else
+        {
+            if (m_getter_or_address == nullptr)
+            {
+                throw new std::runtime_error("prop value address is null!");
+            }
+
+            return reinterpret_cast<T *>(m_getter_or_address);
         }
     }
 

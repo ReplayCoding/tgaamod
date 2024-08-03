@@ -1,6 +1,8 @@
 #include <string>
 #include <fmt/format.h>
 
+#include "mt/mtdti.h"
+#include "mt/mtcolor.h"
 #include "mt/mtproperty.h"
 
 const char *PROP_TYPE_NAMES[] = {
@@ -93,6 +95,73 @@ std::string MtProperty::type_name()
 
     return fmt::format("custom ({})", type());
 };
+
+std::string MtProperty::formatted_value()
+{
+    switch (type())
+    {
+    case static_cast<uint32_t>(PropType::CSTRING):
+    {
+        char* string = get_cstring();
+        if (string == nullptr) {
+            return "null [cstring]";
+        };
+
+        return string;
+    }
+    case static_cast<uint32_t>(PropType::F32):
+    {
+        return std::to_string(get_f32());
+    }
+    case static_cast<uint32_t>(PropType::S32):
+    {
+        return std::to_string(get_s32());
+    }
+    case static_cast<uint32_t>(PropType::U32):
+    {
+        return std::to_string(get_u32());
+    }
+    case static_cast<uint32_t>(PropType::BOOL):
+    {
+        return std::to_string(get_bool());
+    }
+    case static_cast<uint32_t>(PropType::COLOR):
+    {
+        MtColor color = get_color();
+        return fmt::format("#{:02x}{:02x}{:02x}{:02x}", color.m_r, color.m_g, color.m_b, color.m_a);
+    }
+    case static_cast<uint32_t>(PropType::CLASSREF):
+    {
+        MtObject *classref = get_classref();
+
+        if (classref == nullptr)
+        {
+            return "null [classref]";
+        }
+        else
+        {
+            return classref->get_dti()->name();
+        }
+    }
+    case static_cast<uint32_t>(PropType::CLASS):
+    {
+        MtObject *class_ = get_class();
+
+        if (class_ == nullptr)
+        {
+            return "null [class]";
+        }
+        else
+        {
+            return class_->get_dti()->name();
+        }
+    }
+    default:
+    {
+        return fmt::format("<UNHANDLED VALUE TYPE {}>", type_name());
+    }
+    };
+}
 
 MtProperty *MtPropertyList::find_property(const char *name)
 {

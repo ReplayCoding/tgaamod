@@ -3,11 +3,13 @@ add_library(
     dll.cpp
     tgaamod.cpp
     overlay.cpp
+    hook.cpp
     mt/mtdti.cpp
     mt/mtobject.cpp
     mt/mtproperty.cpp
-    hook.cpp
     modules/fps.cpp
+    modules/scriptinspector.cpp
+    widgets/proplist.cpp
 )
 
 target_include_directories(tgaamod PRIVATE ${CMAKE_CURRENT_LIST_DIR})
