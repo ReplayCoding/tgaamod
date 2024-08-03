@@ -39,6 +39,7 @@ private:
     void draw();
 
     bool m_initialized = false;
+    CRITICAL_SECTION* m_render_cs = nullptr;
     IDXGISwapChain *m_swapchain = nullptr;
     ID3D11Device *m_device = nullptr;
     ID3D11DeviceContext *m_device_context = nullptr;

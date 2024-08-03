@@ -33,6 +33,8 @@ Overlay::Overlay(MtObject *skeleton_main) : m_skeyboard_update_state_hook(skeybo
 
     MtObject *srender_ptr = prop_list->find_property("mpRender")->get_classref();
 
+    m_render_cs = reinterpret_cast<CRITICAL_SECTION *>(reinterpret_cast<uintptr_t>(srender_ptr) + 0x892f08);
+
     // mOutputs[0].pSwapChain
     IDXGISwapChain *swapchain = *(reinterpret_cast<IDXGISwapChain **>(reinterpret_cast<uintptr_t>(srender_ptr) + (0x892e98 + 0x10)));
 
@@ -53,6 +55,8 @@ Overlay::~Overlay()
 
 HRESULT Overlay::present_replacement(HRESULT original_present(IDXGISwapChain *, UINT, UINT), IDXGISwapChain *_this, UINT sync_interval, UINT flags)
 {
+    EnterCriticalSection(s_overlay->m_render_cs);
+
     if (!s_overlay->m_initialized)
     {
         s_overlay->initialize_imgui(_this);
@@ -60,6 +64,8 @@ HRESULT Overlay::present_replacement(HRESULT original_present(IDXGISwapChain *, 
     }
 
     s_overlay->draw();
+
+    LeaveCriticalSection(s_overlay->m_render_cs);
 
     return original_present(_this, sync_interval, flags);
 };
@@ -75,6 +81,7 @@ HRESULT Overlay::resize_buffers_replacement(
 {
 
     spdlog::info("ResizeBuffers called!");
+    EnterCriticalSection(s_overlay->m_render_cs);
 
     if (s_overlay->m_render_target_view != nullptr)
     {
@@ -82,10 +89,15 @@ HRESULT Overlay::resize_buffers_replacement(
         s_overlay->m_render_target_view->Release();
         s_overlay->m_render_target_view = nullptr;
     };
+    LeaveCriticalSection(s_overlay->m_render_cs);
 
     HRESULT result = original_resize_buffers(_this, buffer_count, width, height, new_format, swapchain_flags);
 
+    EnterCriticalSection(s_overlay->m_render_cs);
+
     s_overlay->setup_render_target();
+
+    LeaveCriticalSection(s_overlay->m_render_cs);
 
     return result;
 };
