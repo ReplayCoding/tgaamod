@@ -37,6 +37,7 @@ private:
     void initialize_imgui(IDXGISwapChain *swapchain);
     void setup_render_target();
     void draw();
+    void draw_module_selector();
 
     bool m_initialized = false;
     CRITICAL_SECTION* m_render_cs = nullptr;

@@ -165,13 +165,27 @@ void Overlay::draw()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
+    draw_module_selector();
+
     for (std::unique_ptr<Module> &module : TGAAMod::s_tgaa_mod->m_modules)
     {
-        module->draw();
+        if (module->m_should_draw)
+            module->draw();
     };
 
     ImGui::Render();
 
     m_device_context->OMSetRenderTargets(1, &m_render_target_view, nullptr);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Overlay::draw_module_selector() {
+    ImGui::Begin("Modules");
+
+    for (std::unique_ptr<Module> &module : TGAAMod::s_tgaa_mod->m_modules)
+    {
+        ImGui::Checkbox(module->m_module_name, &module->m_should_draw);
+    }
+
+    ImGui::End();
 }

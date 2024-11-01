@@ -3,6 +3,9 @@
 
 #include "mt/mtobject.h"
 
+// Don't include the whole header
+class Overlay;
+
 class Module
 {
 public:
@@ -10,6 +13,9 @@ public:
     virtual ~Module() {};
 
     virtual void draw() = 0;
+
+    bool m_should_draw = true;
+    char *m_module_name = "If you see this, there's a bug";
 };
 
 class ModuleDesc;
@@ -34,7 +40,9 @@ public:
     public:                                                                      \
         virtual std::unique_ptr<Module> create(MtObject *skeleton_main) override \
         {                                                                        \
-            return std::make_unique<class_>(skeleton_main);                      \
+            auto module = std::make_unique<class_>(skeleton_main);               \
+            module->m_module_name = #class_;                                     \
+            return module;                                                       \
         };                                                                       \
     };                                                                           \
     ModuleDesc##class_ module_desc_##class_ = {};
